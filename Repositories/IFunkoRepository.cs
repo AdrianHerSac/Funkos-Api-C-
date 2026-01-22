@@ -9,4 +9,5 @@ public interface IFunkoRepository
     Task<Funko?> UpdateAsync(string id, Funko newFunko);
     Task<Funko> AddAsync(Funko newFunko);
     Task<Funko?> DeleteAsync(string id);
+    Task<Funko?> FindByNombreAsync(string nombre);
 }

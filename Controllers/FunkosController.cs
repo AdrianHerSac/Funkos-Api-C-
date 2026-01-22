@@ -4,7 +4,7 @@ using FunkosApi.Error;
 using FunkosApi.Services;
 using Microsoft.AspNetCore.Mvc;
  
-namespace FunkoApi.Controllers;
+namespace FunkosApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -38,6 +38,7 @@ public class FunkosController(IService service):ControllerBase
     [ProducesResponseType(typeof(FunkoResponseDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPost]
     public async Task<IActionResult> PostAsync([FromBody] FunkoRequestDto request)
     {
         return await service.SaveFunkoAsync(request).Match(
@@ -45,7 +46,9 @@ public class FunkosController(IService service):ControllerBase
             onFailure: error => error switch
             {
                 FunkoValidationError => BadRequest(new { message = error.Error }),
-                _ => StatusCode(500, new { message = error.Error })
+            
+                FunkoConflictError => Conflict(new { message = error.Error }), 
+            _ => StatusCode(500, new { message = error.Error })
             });
     }
 
@@ -80,5 +83,6 @@ public class FunkosController(IService service):ControllerBase
                 _ => StatusCode(500, new { message = error.Error })
             });
     }
+
     
 }

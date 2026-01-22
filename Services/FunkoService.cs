@@ -75,44 +75,50 @@ public class FunkoService : IService
         return Result.Success<FunkoResponseDto, FunkoError>(dto);
     }
 
-    public async Task<Result<FunkoResponseDto, FunkoError>> SaveFunkoAsync(
-        FunkoRequestDto request)
+    public async Task<Result<FunkoResponseDto, FunkoError>> SaveFunkoAsync(FunkoRequestDto request)
     {
-        _logger.LogInformation("Intentando guardar Funko: {Nombre}", request.Nombre);
+        _logger.LogInformation("Guardando Funko: {Nombre}", request.Nombre);
+
+        // 1. VERIFICAR DUPLICADOS
+        // Usamos 'request.Nombre' (que viene de tu FunkoRequestDto)
+        var existe = await _repository.FindByNombreAsync(request.Nombre);
+    
+        if (existe is not null)
+        {
+            // Si existe, devolvemos el error que creamos en el paso 2
+            return new FunkoConflictError($"El Funko '{request.Nombre}' ya existe.");
+        }
 
         try
         {
+            // 2. CREAR SI NO EXISTE
             var nuevoFunko = new Funko
             {
                 Nombre = request.Nombre,
                 Precio = request.Precio,
                 Categoria = request.Categoria,
-                Imagen = request.Imagen ?? "default.png",
+                Imagen = request.Imagen ?? "https://via.placeholder.com/150", // Imagen por defecto
                 FechaCreacion = DateTime.Now,
                 FechaModificacion = DateTime.Now
             };
 
-            // 3. Persistencia
             var funkoGuardado = await _repository.AddAsync(nuevoFunko);
 
-            // 4. Mapeo a ResponseDto
-            var response = new FunkoResponseDto(
-                funkoGuardado.Id ?? string.Empty,
+            // Devolvemos el DTO respuesta
+            return new FunkoResponseDto(
+                funkoGuardado.Id ?? "",
                 funkoGuardado.Nombre,
                 funkoGuardado.Precio,
                 funkoGuardado.Categoria,
-                funkoGuardado.Imagen ?? "default.png",
+                funkoGuardado.Imagen,
                 funkoGuardado.FechaCreacion,
                 funkoGuardado.FechaModificacion
             );
-
-            return Result.Success<FunkoResponseDto, FunkoError>(response);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al insertar en la base de datos");
-            // Cambiamos el mensaje para ver el error real en los logs de la consola
-            return Result.Failure<FunkoResponseDto, FunkoError>(new FunkoError($"Error DB: {ex.Message}"));
+            _logger.LogError(ex, "Error en BBDD");
+            return new FunkoError("Error al guardar en la base de datos");
         }
     }
 

@@ -24,3 +24,5 @@ public class InvalidFileTypeException : Exception
         throw new NotImplementedException();
     }
 }
+
+public record FunkoConflictError(string Error) : FunkoError(Error);

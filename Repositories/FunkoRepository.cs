@@ -62,4 +62,9 @@ public class FunkoRepository : IFunkoRepository
         var filter = Builders<Funko>.Filter.Eq(f => f.Id, id);
         return await _funkos.FindOneAndDeleteAsync(filter);
     }
+
+    public async Task<Funko?> FindByNombreAsync(string nombre)
+    {
+        return await _funkos.Find(f => f.Nombre == nombre).FirstOrDefaultAsync();
+    }
 }
