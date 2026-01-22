@@ -1,0 +1,25 @@
+meta {
+  name: Crear funko
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5182/api/Funkos
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "Baby Yoda",
+    "precio": 22.50,
+    "categoria": "Star Wars",
+    "imagen": "http://imagen-url.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

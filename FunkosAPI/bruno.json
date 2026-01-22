@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "FunkosAPI",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
