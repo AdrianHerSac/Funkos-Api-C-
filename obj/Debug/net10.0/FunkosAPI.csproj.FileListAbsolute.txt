@@ -43,3 +43,4 @@ C:\Programacion\FunkosAPI\FunkosAPI\bin\Debug\net10.0\ZstdSharp.dll
 C:\Programacion\FunkosAPI\FunkosAPI\bin\Debug\net10.0\CSharpFunctionalExtensions.dll
 C:\Programacion\FunkosAPI\FunkosAPI\bin\Debug\net10.0\NLog.dll
 C:\Programacion\FunkosAPI\FunkosAPI\bin\Debug\net10.0\FunkosAPI\bruno.json
+C:\Programacion\FunkosAPI\FunkosAPI\obj\Debug\net10.0\FunkosAPI.sourcelink.json
