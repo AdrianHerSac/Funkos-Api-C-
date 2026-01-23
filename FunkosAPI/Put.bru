@@ -1,11 +1,11 @@
 meta {
-  name: Crear funko
+  name: Put
   type: http
-  seq: 2
+  seq: 5
 }
 
-post {
-  url: http://localhost:5182/api/Funkos
+put {
+  url: http://localhost:5182/api/funkos/6973aeb36e0421eaacba4973
   body: json
   auth: inherit
 }
@@ -13,7 +13,7 @@ post {
 body:json {
   {
     "nombre": "Iron Man",
-    "precio": 22.50,
+    "precio": 50,
     "categoria": "Marvel",
     "imagen": "https://m.media-amazon.com/images/I/71IO+L6PRHL._AC_SY300_SX300_QL70_ML2_.jpg"
   }

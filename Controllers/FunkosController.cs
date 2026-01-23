@@ -60,7 +60,7 @@ public class FunkosController(IService service):ControllerBase
     public async Task<IActionResult> PutAsync(string id, [FromBody] FunkoRequestDto request)
     {
         return await service.UpdateFunkoAsync(id, request).Match(
-            onSuccess: response => Ok(response),
+            onSuccess: response => Ok($"/api/funkos/{response.Id}"),
             onFailure: error => error switch
             {
                 FunkoValidationError => BadRequest(new { message = error.Error }),
