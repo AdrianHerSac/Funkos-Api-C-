@@ -79,19 +79,15 @@ public class FunkoService : IService
     {
         _logger.LogInformation("Guardando Funko: {Nombre}", request.Nombre);
 
-        // 1. VERIFICAR DUPLICADOS
-        // Usamos 'request.Nombre' (que viene de tu FunkoRequestDto)
         var existe = await _repository.FindByNombreAsync(request.Nombre);
     
         if (existe is not null)
         {
-            // Si existe, devolvemos el error que creamos en el paso 2
             return new FunkoConflictError($"El Funko '{request.Nombre}' ya existe.");
         }
 
         try
         {
-            // 2. CREAR SI NO EXISTE
             var nuevoFunko = new Funko
             {
                 Nombre = request.Nombre,
@@ -104,7 +100,6 @@ public class FunkoService : IService
 
             var funkoGuardado = await _repository.AddAsync(nuevoFunko);
 
-            // Devolvemos el DTO respuesta
             return new FunkoResponseDto(
                 funkoGuardado.Id ?? "",
                 funkoGuardado.Nombre,
@@ -122,9 +117,31 @@ public class FunkoService : IService
         }
     }
 
-    public Task<Result<FunkoResponseDto, FunkoError>> DeleteFunkoAsync(string id)
+    public async Task<Result<FunkoResponseDto, FunkoError>> DeleteFunkoAsync(string id)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Eliminando Funko: {Id}", id);
+
+        var funko = await _repository.GetByIdAsync(id);
+
+        if (funko is null)
+        {
+            return Result.Failure<FunkoResponseDto, FunkoError>(
+                new FunkoNotFoundError($"Funko con ID {id} no encontrado"));
+        }
+
+        await _repository.DeleteAsync(id);
+
+        var dto = new FunkoResponseDto(
+            funko.Id ?? "",
+            funko.Nombre,
+            funko.Precio,
+            funko.Categoria,
+            funko.Imagen ?? "",
+            funko.FechaCreacion,
+            funko.FechaModificacion
+        );
+
+        return Result.Success<FunkoResponseDto, FunkoError>(dto);
     }
 
     public Task<Result<FunkoResponseDto, FunkoError>> UpdateFunkoAsync(string id, FunkoRequestDto request)

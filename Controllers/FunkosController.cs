@@ -76,13 +76,11 @@ public class FunkosController(IService service):ControllerBase
     public async Task<IActionResult> DeleteAsync(string id)
     {
         return await service.DeleteFunkoAsync(id).Match(
-            onSuccess: response => Ok(response),
+            onSuccess: response => Ok($"/api/funkos/{id}"),
             onFailure: error => error switch
             {
                 FunkoNotFoundError => NotFound(new { message = error.Error }),
                 _ => StatusCode(500, new { message = error.Error })
             });
     }
-
-    
 }
