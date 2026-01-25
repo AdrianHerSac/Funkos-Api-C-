@@ -176,4 +176,37 @@ public class FunkoService : IService
 
         return Result.Success<FunkoResponseDto, FunkoError>(dto);
     }
+
+    public async Task<Result<FunkoResponseDto, FunkoError>> PatchFunkoAsync(string id, FunkoRequestDto request)
+    {
+        _logger.LogInformation("Actualizando Funko: {Id}", id);
+
+        var funko = await _repository.GetByIdAsync(id);
+
+        if (funko is null)
+        {
+            return Result.Failure<FunkoResponseDto, FunkoError>(
+                new FunkoNotFoundError($"Funko con ID {id} no encontrado"));
+        }
+
+        funko.Nombre = request.Nombre;
+        funko.Precio = request.Precio;
+        funko.Categoria = request.Categoria;
+        funko.Imagen = request.Imagen ?? "https://via.placeholder.com/150";
+        funko.FechaModificacion = DateTime.Now;
+
+        await _repository.UpdateAsync(id, funko);
+
+        var dto = new FunkoResponseDto(
+            funko.Id ?? "",
+            funko.Nombre,
+            funko.Precio,
+            funko.Categoria,
+            funko.Imagen ?? "",
+            funko.FechaCreacion,
+            funko.FechaModificacion
+        );
+
+        return Result.Success<FunkoResponseDto, FunkoError>(dto);
+    }
 }

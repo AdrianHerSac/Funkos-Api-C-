@@ -83,4 +83,22 @@ public class FunkosController(IService service):ControllerBase
                 _ => StatusCode(500, new { message = error.Error })
             });
     }
+
+    [HttpPatch("{id}")]
+    [ProducesResponseType(typeof(FunkoResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> PatchAsync(
+        string id,
+        [FromBody] FunkoRequestDto request)
+    {
+        return await service.PatchFunkoAsync(id, request).Match(
+            onSuccess: response => Ok($"/api/funkos/{id}"),
+            onFailure: error => error switch
+            {
+                FunkoNotFoundError => NotFound(new { message = error.Error }),
+                _ => StatusCode(500, new { message = error.Error })
+            });
+    }
 }

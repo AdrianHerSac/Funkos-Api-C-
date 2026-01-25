@@ -11,5 +11,5 @@ public interface IService
     Task<Result<FunkoResponseDto,FunkoError>> SaveFunkoAsync( FunkoRequestDto request);
     Task<Result<FunkoResponseDto,FunkoError>> DeleteFunkoAsync(string id);
     Task<Result<FunkoResponseDto,FunkoError>> UpdateFunkoAsync(string id,FunkoRequestDto request);
-    
+    Task<Result<FunkoResponseDto, FunkoError>> PatchFunkoAsync(string id, FunkoRequestDto request);
 }

@@ -1,10 +1,10 @@
 meta {
-  name: Put
+  name: Patch funko
   type: http
-  seq: 5
+  seq: 6
 }
 
-put {
+patch {
   url: http://localhost:5182/api/funkos/697499b07d148ed02b69d940
   body: json
   auth: inherit
@@ -12,10 +12,10 @@ put {
 
 body:json {
   {
-    "nombre": "Iron Man",
-    "precio": 50,
+    "nombre": "Spiderman",
+    "precio": 35.99,
     "categoria": "Marvel",
-    "imagen": "https://m.media-amazon.com/images/I/71IO+L6PRHL._AC_SY300_SX300_QL70_ML2_.jpg"
+    "imagen": "https://ejemplo.com/imagen.jpg"
   }
 }
 
