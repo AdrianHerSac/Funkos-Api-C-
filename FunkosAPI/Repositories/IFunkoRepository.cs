@@ -1,6 +1,6 @@
 ﻿using FunkosApi.Models;
 
-namespace FunkosApi.Repository;
+namespace FunkosApi.Repositories;
 
 public interface IFunkoRepository
 {
@@ -10,4 +10,6 @@ public interface IFunkoRepository
     Task<Funko> AddAsync(Funko newFunko);
     Task<Funko?> DeleteAsync(string id);
     Task<Funko?> FindByNombreAsync(string nombre);
+    IQueryable<Funko> FindAllAsNoTracking();
+    Task<Funko> FindByIdAsync(string id);
 }

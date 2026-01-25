@@ -2,6 +2,7 @@
 using FunkosApi.dto;
 using FunkosApi.Error;
 using FunkosApi.Models;
+using FunkosApi.Repositories;
 using FunkosApi.Repository;
 using FunkosApi.Services;
 

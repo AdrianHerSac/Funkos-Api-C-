@@ -3,7 +3,7 @@ using FunkosApi.Models;
 using MongoDB.Driver;
 using NLog;
 
-namespace FunkosApi.Repository;
+namespace FunkosApi.Repositories;
 
 public class FunkoRepository : IFunkoRepository
 {
@@ -66,5 +66,15 @@ public class FunkoRepository : IFunkoRepository
     public async Task<Funko?> FindByNombreAsync(string nombre)
     {
         return await _funkos.Find(f => f.Nombre == nombre).FirstOrDefaultAsync();
+    }
+
+    public IQueryable<Funko> FindAllAsNoTracking()
+    {
+        return _funkos.AsQueryable();
+    }
+
+    public Task<Funko> FindByIdAsync(string id)
+    {
+        return _funkos.Find(f => f.Id == id).FirstOrDefaultAsync();
     }
 }

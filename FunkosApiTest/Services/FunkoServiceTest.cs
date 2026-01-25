@@ -1,7 +1,7 @@
 ﻿using FunkosApi.dto;
 using FunkosApi.Error;
 using FunkosApi.Models;
-using FunkosApi.Repository;
+using FunkosApi.Repositories;
 using FunkosAPI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
