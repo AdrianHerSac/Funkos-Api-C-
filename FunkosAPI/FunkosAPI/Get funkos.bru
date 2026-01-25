@@ -1,0 +1,16 @@
+meta {
+  name: Get funkos
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:5182/api/funkos
+  body: none
+  auth: basic
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

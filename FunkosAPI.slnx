@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="compose.yaml" />
+  </Folder>
+  <Project Path="FunkosAPI/FunkosAPI.csproj" />
+  <Project Path="FunkosApiTest/FunkosApiTest.csproj" />
+</Solution>

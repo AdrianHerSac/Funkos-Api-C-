@@ -1,0 +1,25 @@
+meta {
+  name: Crear funko
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5182/api/Funkos
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "Iron Man",
+    "precio": 22.50,
+    "categoria": "Marvel",
+    "imagen": "https://m.media-amazon.com/images/I/71IO+L6PRHL._AC_SY300_SX300_QL70_ML2_.jpg"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
