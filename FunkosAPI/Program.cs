@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using FunkosApi.Repository;
 using FunkosApi.config;
 using FunkosApi.Repositories;
 using FunkosApi.Services;
