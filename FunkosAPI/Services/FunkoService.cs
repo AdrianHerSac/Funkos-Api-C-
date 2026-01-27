@@ -5,6 +5,7 @@ using FunkosApi.Models;
 using FunkosApi.Repositories;
 using FunkosApi.Repository;
 using FunkosApi.Services;
+using FunkoApi.mapper;
 
 namespace FunkosAPI.Services;
 
@@ -40,15 +41,7 @@ public class FunkoService : IService
     {
         var funkos = await _repository.GetAllAsync();
 
-        var listaDtos = funkos.Select(f => new FunkoResponseDto(
-            f.Id ?? string.Empty, 
-            f.Nombre, 
-            f.Precio,
-            f.Categoria,
-            f.Imagen, 
-            f.FechaCreacion,
-            f.FechaModificacion
-        )).ToList();
+        var listaDtos = funkos.Select(f => f.ToDto()).ToList();
 
         return listaDtos;
     }
@@ -60,20 +53,10 @@ public class FunkoService : IService
         if (f == null)
         {
             return Result.Failure<FunkoResponseDto, FunkoError>
-            (new FunkoError($"Funko con ID {id} no encontrado" ));
+            (new FunkoNotFoundError($"Funko con ID {id} no encontrado" ));
         }
 
-        var dto = new FunkoResponseDto(
-            f.Id ?? string.Empty, 
-            f.Nombre, 
-            f.Precio, 
-            f.Categoria, 
-            f.Imagen ?? string.Empty, 
-            f.FechaCreacion, 
-            f.FechaModificacion
-        );
-
-        return Result.Success<FunkoResponseDto, FunkoError>(dto);
+        return Result.Success<FunkoResponseDto, FunkoError>(f.ToDto());
     }
 
     public async Task<Result<FunkoResponseDto, FunkoError>> SaveFunkoAsync(FunkoRequestDto request)
@@ -94,22 +77,17 @@ public class FunkoService : IService
                 Nombre = request.Nombre,
                 Precio = request.Precio,
                 Categoria = request.Categoria,
-                Imagen = request.Imagen ?? "https://via.placeholder.com/150", // Imagen por defecto
+                Stock = request.Stock,
+                Descripcion = request.Descripcion ?? string.Empty,
+                Imagen = request.Imagen ?? "https://via.placeholder.com/150",
+                IsDeleted = false,
                 FechaCreacion = DateTime.Now,
                 FechaModificacion = DateTime.Now
             };
 
             var funkoGuardado = await _repository.AddAsync(nuevoFunko);
 
-            return new FunkoResponseDto(
-                funkoGuardado.Id ?? "",
-                funkoGuardado.Nombre,
-                funkoGuardado.Precio,
-                funkoGuardado.Categoria,
-                funkoGuardado.Imagen,
-                funkoGuardado.FechaCreacion,
-                funkoGuardado.FechaModificacion
-            );
+            return funkoGuardado.ToDto();
         }
         catch (Exception ex)
         {
@@ -132,17 +110,7 @@ public class FunkoService : IService
 
         await _repository.DeleteAsync(id);
 
-        var dto = new FunkoResponseDto(
-            funko.Id ?? "",
-            funko.Nombre,
-            funko.Precio,
-            funko.Categoria,
-            funko.Imagen ?? "",
-            funko.FechaCreacion,
-            funko.FechaModificacion
-        );
-
-        return Result.Success<FunkoResponseDto, FunkoError>(dto);
+        return Result.Success<FunkoResponseDto, FunkoError>(funko.ToDto());
     }
 
     public async Task<Result<FunkoResponseDto, FunkoError>> UpdateFunkoAsync(string id, FunkoRequestDto request)
@@ -160,22 +128,14 @@ public class FunkoService : IService
         funko.Nombre = request.Nombre;
         funko.Precio = request.Precio;
         funko.Categoria = request.Categoria;
+        funko.Stock = request.Stock;
+        funko.Descripcion = request.Descripcion ?? string.Empty;
         funko.Imagen = request.Imagen ?? "https://via.placeholder.com/150";
         funko.FechaModificacion = DateTime.Now;
 
         await _repository.UpdateAsync(id, funko);
 
-        var dto = new FunkoResponseDto(
-            funko.Id ?? "",
-            funko.Nombre,
-            funko.Precio,
-            funko.Categoria,
-            funko.Imagen ?? "",
-            funko.FechaCreacion,
-            funko.FechaModificacion
-        );
-
-        return Result.Success<FunkoResponseDto, FunkoError>(dto);
+        return Result.Success<FunkoResponseDto, FunkoError>(funko.ToDto());
     }
 
     public async Task<Result<FunkoResponseDto, FunkoError>> PatchFunkoAsync(string id, FunkoRequestDto request)
@@ -193,21 +153,13 @@ public class FunkoService : IService
         funko.Nombre = request.Nombre;
         funko.Precio = request.Precio;
         funko.Categoria = request.Categoria;
+        funko.Stock = request.Stock;
+        funko.Descripcion = request.Descripcion ?? string.Empty;
         funko.Imagen = request.Imagen ?? "https://via.placeholder.com/150";
         funko.FechaModificacion = DateTime.Now;
 
         await _repository.UpdateAsync(id, funko);
 
-        var dto = new FunkoResponseDto(
-            funko.Id ?? "",
-            funko.Nombre,
-            funko.Precio,
-            funko.Categoria,
-            funko.Imagen ?? "",
-            funko.FechaCreacion,
-            funko.FechaModificacion
-        );
-
-        return Result.Success<FunkoResponseDto, FunkoError>(dto);
+        return Result.Success<FunkoResponseDto, FunkoError>(funko.ToDto());
     }
 }

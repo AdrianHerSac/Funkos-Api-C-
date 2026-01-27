@@ -60,25 +60,10 @@ public class FunkosController(IService service):ControllerBase
     public async Task<IActionResult> PutAsync(string id, [FromBody] FunkoRequestDto request)
     {
         return await service.UpdateFunkoAsync(id, request).Match(
-            onSuccess: response => Ok($"/api/funkos/{response.Id}"),
+            onSuccess: response => Ok(response), 
             onFailure: error => error switch
             {
                 FunkoValidationError => BadRequest(new { message = error.Error }),
-                FunkoNotFoundError => NotFound(new { message = error.Error }),
-                _ => StatusCode(500, new { message = error.Error })
-            });
-    }
-
-    [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(FunkoResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteAsync(string id)
-    {
-        return await service.DeleteFunkoAsync(id).Match(
-            onSuccess: response => Ok($"/api/funkos/{id}"),
-            onFailure: error => error switch
-            {
                 FunkoNotFoundError => NotFound(new { message = error.Error }),
                 _ => StatusCode(500, new { message = error.Error })
             });
@@ -94,7 +79,22 @@ public class FunkosController(IService service):ControllerBase
         [FromBody] FunkoRequestDto request)
     {
         return await service.PatchFunkoAsync(id, request).Match(
-            onSuccess: response => Ok($"/api/funkos/{id}"),
+            onSuccess: response => AcceptedAtAction(nameof(GetByIdAsync), new { id }, response),
+            onFailure: error => error switch
+            {
+                FunkoNotFoundError => NotFound(new { message = error.Error }),
+                _ => StatusCode(500, new { message = error.Error })
+            });
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteAsync(string id)
+    {
+        return await service.DeleteFunkoAsync(id).Match(
+            onSuccess: _ => (IActionResult)NoContent(),            
             onFailure: error => error switch
             {
                 FunkoNotFoundError => NotFound(new { message = error.Error }),

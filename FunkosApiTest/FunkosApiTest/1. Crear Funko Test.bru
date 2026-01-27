@@ -1,0 +1,43 @@
+meta {
+  name: 1. Crear Funko Test
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/api/funkos
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "{{nombre_unico}}",
+    "precio": 19.99,
+    "categoria": "Testing",
+    "stock": 10,
+    "imagen": "https://via.placeholder.com/150"
+  }
+}
+
+script:pre-request {
+  // Generamos un numero aleatorio
+  const randomNum = Math.floor(Math.random() * 10000);
+  // Creamos el nombre y lo guardamos en una variable
+  bru.setVar("nombre_unico", "Test Funko Auto " + randomNum);
+}
+
+script:post-response {
+  bru.setVar("testId", res.body.id);
+}
+
+tests {
+  test("Debe crear correctamente (201)", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

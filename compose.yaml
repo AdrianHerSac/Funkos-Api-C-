@@ -5,12 +5,15 @@
       context: .
       dockerfile: FunkosAPI/Dockerfile
     ports:
-      - "5084:8080" 
+      - "5084:8080"
     depends_on:
       - mongodb
+      - redis  # Agregado: Esperar a que Redis arranque también
     environment:
       - ConnectionStrings__MongoDb=mongodb://mongodb:27017
-
+      # Asumiendo que usas StackExchange.Redis en .NET, necesitas esto:
+      - ConnectionStrings__Redis=redis:6379,password=${REDIS_PASSWORD}
+  
   mongodb:
     image: mongo:latest
     container_name: mongo_funkos
@@ -18,6 +21,17 @@
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+  
+  redis:
+    image: redis:7-alpine
+    restart: always
+    env_file: .env
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    ports:
+      - "${REDIS_PORT}:6379"
 
 volumes:
   mongo_data:
+  redis-data:

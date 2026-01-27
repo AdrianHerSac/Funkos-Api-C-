@@ -146,7 +146,7 @@ public class FunkoServiceTest
 
         // Assert
         Assert.That(result.IsFailure, Is.True);
-        Assert.That(result.Error, Is.TypeOf<FunkoError>());
+        Assert.That(result.Error, Is.TypeOf<FunkoNotFoundError>());
         Assert.That(result.Error.Error, Does.Contain("no encontrado"));
     }
 

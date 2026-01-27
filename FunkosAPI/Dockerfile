@@ -11,7 +11,7 @@ COPY ["FunkosAPI/FunkosAPI.csproj", "FunkosAPI/"]
 RUN dotnet restore "FunkosAPI/FunkosAPI.csproj"
 COPY . .
 WORKDIR "/src/FunkosAPI"
-RUN dotnet build "./FunkosAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./FunkosAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build /p:UseAppHost=false
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

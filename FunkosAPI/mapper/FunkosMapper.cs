@@ -12,7 +12,10 @@ public static class FunkosMapper
             funko.Nombre, 
             funko.Precio, 
             funko.Categoria,
+            funko.Stock,
+            funko.Descripcion,
             funko.Imagen,
+            funko.IsDeleted,
             funko.FechaCreacion,
             funko.FechaModificacion
         );

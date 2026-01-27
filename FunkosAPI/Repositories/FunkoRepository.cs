@@ -36,6 +36,8 @@ public class FunkoRepository : IFunkoRepository
             .Set(f => f.Nombre, newFunko.Nombre)
             .Set(f => f.Categoria, newFunko.Categoria)
             .Set(f => f.Precio, newFunko.Precio)
+            .Set(f => f.Stock, newFunko.Stock)
+            .Set(f => f.Descripcion, newFunko.Descripcion)
             .Set(f => f.Imagen, newFunko.Imagen)
             .Set(f => f.FechaModificacion, DateTime.Now);
         

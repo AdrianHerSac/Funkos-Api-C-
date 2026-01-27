@@ -1,0 +1,25 @@
+meta {
+  name: 2. Obtener Funko Creado
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/api/funkos/{{testId}}
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("Debe retornar 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("El nombre coincide con el generado", function() {
+    expect(res.body.nombre).to.equal(bru.getVar("nombre_unico"));
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -31,3 +31,6 @@ app.UseHttpsRedirection();
 app.MapControllers(); 
 app.MapGet("/", () => "¡Bienvenido a la API de Funkos!");
 app.Run();
+
+// Hacer la clase Program accesible para tests E2E
+public partial class Program { }

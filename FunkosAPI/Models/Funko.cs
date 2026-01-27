@@ -17,6 +17,15 @@ public record Funko
 
     [BsonElement("precio")]
     public double Precio { get; set; }
+    
+    [BsonElement("stock")]
+    public double Stock { get; set; }
+    
+    [BsonElement("descripcion")]
+    public string Descripcion { get; set; } = string.Empty;
+    
+    [BsonElement("borrado")]
+    public bool IsDeleted { get; set; }
 
     [BsonElement("fechaCreacion")]
     public DateTime FechaCreacion { get; set; } = DateTime.Now;

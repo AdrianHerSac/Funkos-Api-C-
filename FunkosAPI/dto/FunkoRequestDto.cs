@@ -15,5 +15,11 @@ public record FunkoRequestDto
     [Required(ErrorMessage = "Ingrese categoría válida de funko")]
     public string Categoria { get; init; } = string.Empty;
     
+    [Required(ErrorMessage = "Ingrese un stock válido")]
+    [Range(0, 99999, ErrorMessage = "Ingrese un stock entre 0 y 99999")]
+    public double Stock { get; init; }
+    
+    public string? Descripcion { get; init; }
+    
     public string? Imagen { get; init; }
 }

@@ -1,0 +1,22 @@
+meta {
+  name: 4. Borrar Funko
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{host}}/api/funkos/{{testId}}
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("Status 204 No Content", function() {
+      expect(res.getStatus()).to.equal(204);
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

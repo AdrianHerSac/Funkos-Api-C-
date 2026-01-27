@@ -1,0 +1,35 @@
+meta {
+  name: 3. Modificar Funko
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{host}}/api/funkos/{{testId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "Test Funko Modificado",
+    "precio": 50.00,
+    "categoria": "Testing",
+    "stock": 5,
+    "imagen": "https://via.placeholder.com/150"
+  }
+}
+
+tests {
+  test("Status 200", function() {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Precio actualizado", function() {
+      expect(res.body.precio).to.equal(50.00);
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
