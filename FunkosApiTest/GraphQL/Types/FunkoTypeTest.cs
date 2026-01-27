@@ -1,8 +1,9 @@
 using FluentAssertions;
 using FunkosApi.Models;
 using FunkosAPI.GraphQL.Types;
+using HotChocolate;
 using HotChocolate.Types;
-using NUnit.Framework;
+using System.Reflection;
 
 namespace FunkosApiTest.GraphQL.Types;
 
@@ -20,17 +21,13 @@ public class FunkoTypeTest
     [Test]
     public void FunkoType_ShouldInheritFromObjectType()
     {
-        // Assert
         _funkoType.Should().BeAssignableTo<ObjectType<Funko>>();
     }
 
     [Test]
     public void FunkoType_ShouldHavePublicConstructor()
     {
-        // Act
         var instance = new FunkoType();
-
-        // Assert
         instance.Should().NotBeNull();
         instance.Should().BeOfType<FunkoType>();
     }
@@ -38,64 +35,79 @@ public class FunkoTypeTest
     [Test]
     public void FunkoType_ShouldHaveConfigureMethod()
     {
-        // Arrange
-        // Añadimos el array de tipos (tercer argumento) para decir: 
-        // "Dame el Configure que recibe un IObjectTypeDescriptor<Funko>"
         var method = typeof(FunkoType).GetMethod(
             "Configure",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
-            new Type[] { typeof(IObjectTypeDescriptor<Funko>) } 
+            BindingFlags.NonPublic | BindingFlags.Instance,
+            new[] { typeof(IObjectTypeDescriptor<Funko>) } 
         );
 
-        // Assert
-        method.Should().NotBeNull("El método Configure debe existir y no ser ambiguo");
+        method.Should().NotBeNull("El método Configure debe existir");
         method!.ReturnType.Should().Be(typeof(void));
     }
 
     [Test]
-    public void FunkoType_ConfigureMethod_ShouldHaveCorrectParameter()
+    public void Configure_ShouldSetTypeName()
     {
-        // Arrange
-        // Especificamos que buscamos el método "Configure" que acepta un parámetro de tipo IObjectTypeDescriptor<Funko>
-        var method = typeof(FunkoType).GetMethod(
-            "Configure",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
-            new Type[] { typeof(IObjectTypeDescriptor<Funko>) } // <--- ESTO ES LO QUE FALTABA
-        );
+        var schema = SchemaBuilder.New()
+            .AddType(_funkoType)
+            .ModifyOptions(o => o.StrictValidation = false)
+            .Create();
 
-        // Assert
-        method.Should().NotBeNull("El método Configure debería existir y ser protected/private");
-    
-        var parameters = method!.GetParameters();
-        parameters.Should().HaveCount(1);
-        parameters[0].ParameterType.Should().Be(typeof(IObjectTypeDescriptor<Funko>));
+        var funkoType = (ObjectType)schema.Types.Single(t => t.Name == "Funko");
+
+        funkoType.Should().NotBeNull();
+        funkoType.Name.Should().Be("Funko");
     }
 
     [Test]
-    public void FunkoType_ShouldBePublicClass()
+    public void Configure_ShouldSetTypeDescription()
     {
-        // Assert
-        typeof(FunkoType).IsPublic.Should().BeTrue();
+        var schema = SchemaBuilder.New()
+            .AddType(_funkoType)
+            .ModifyOptions(o => o.StrictValidation = false)
+            .Create();
+
+        var funkoType = (ObjectType)schema.Types.Single(t => t.Name == "Funko");
+
+        funkoType.Description.Should().Be("Entidad Funko");
     }
 
     [Test]
-    public void FunkoType_ShouldNotBeAbstract()
+    public void Configure_ShouldConfigureCampos()
     {
-        // Assert
-        typeof(FunkoType).IsAbstract.Should().BeFalse();
+        var schema = SchemaBuilder.New()
+            .AddType(_funkoType)
+            .ModifyOptions(o => o.StrictValidation = false)
+            .Create();
+
+        var funkoType = (ObjectType)schema.Types.Single(t => t.Name == "Funko");
+
+        funkoType.Fields["id"].Description.Should().Be("El ID del funko");
+        funkoType.Fields["id"].Type.Kind.Should().Be(TypeKind.NonNull);
+
+        funkoType.Fields["nombre"].Description.Should().Be("El nombre del funko");
+        funkoType.Fields["nombre"].Type.Kind.Should().Be(TypeKind.NonNull);
+
+        funkoType.Fields["precio"].Description.Should().Be("El precio del funko");
+        funkoType.Fields["precio"].Type.Kind.Should().Be(TypeKind.NonNull);
+
+        funkoType.Fields["imagen"].Description.Should().Be("URL de la imagen");
+        funkoType.Fields["imagen"].Type.Kind.Should().NotBe(TypeKind.NonNull);
+        
+        funkoType.Fields["categoria"].Type.Kind.Should().Be(TypeKind.NonNull);
+        funkoType.Fields["stock"].Type.Kind.Should().Be(TypeKind.NonNull);
     }
 
     [Test]
-    public void FunkoType_ShouldNotBeSealed()
+    public void Configure_ShouldHaveCorrectNumberOfFields()
     {
-        // Assert
-        typeof(FunkoType).IsSealed.Should().BeFalse();
-    }
+        var schema = SchemaBuilder.New()
+            .AddType(_funkoType)
+            .ModifyOptions(o => o.StrictValidation = false)
+            .Create();
 
-    [Test]
-    public void FunkoType_Namespace_ShouldBeCorrect()
-    {
-        // Assert
-        typeof(FunkoType).Namespace.Should().Be("FunkosAPI.GraphQL.Types");
+        var funkoType = (ObjectType)schema.Types.Single(t => t.Name == "Funko");
+
+        funkoType.Fields.Should().HaveCount(11);
     }
 }

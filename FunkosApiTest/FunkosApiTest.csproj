@@ -11,6 +11,11 @@
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4" />
         <PackageReference Include="FluentAssertions" Version="8.8.0" />
+
+        <PackageReference Include="HotChocolate" Version="16.0.0-p.10.33" />
+        <PackageReference Include="HotChocolate.Execution" Version="16.0.0-p.10.33" />
+        <PackageReference Include="HotChocolate.Types" Version="16.0.0-p.10.33" />
+
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
         <PackageReference Include="Moq" Version="4.20.72" />
@@ -25,19 +30,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FunkosAPI\FunkosAPI.csproj" />
+        <ProjectReference Include="..\FunkosAPI\FunkosAPI.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="E2E\**" />
+        <Compile Remove="E2E\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="E2E\**" />
+        <EmbeddedResource Remove="E2E\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="E2E\**" />
+        <None Remove="E2E\**" />
     </ItemGroup>
 
 </Project>

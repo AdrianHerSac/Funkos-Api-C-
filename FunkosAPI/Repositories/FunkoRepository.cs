@@ -75,7 +75,7 @@ public class FunkoRepository : IFunkoRepository
         return _funkos.AsQueryable();
     }
 
-    public Task<Funko> FindByIdAsync(string id)
+    public Task<Funko?> FindByIdAsync(string id)
     {
         return _funkos.Find(f => f.Id == id).FirstOrDefaultAsync();
     }
