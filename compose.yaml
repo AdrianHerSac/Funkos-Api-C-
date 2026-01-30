@@ -8,10 +8,9 @@
       - "5084:8080"
     depends_on:
       - mongodb
-      - redis  # Agregado: Esperar a que Redis arranque también
+      - redis 
     environment:
       - ConnectionStrings__MongoDb=mongodb://mongodb:27017
-      # Asumiendo que usas StackExchange.Redis en .NET, necesitas esto:
       - ConnectionStrings__Redis=redis:6379,password=${REDIS_PASSWORD}
   
   mongodb:
@@ -19,6 +18,9 @@
     container_name: mongo_funkos
     ports:
       - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password123
     volumes:
       - mongo_data:/data/db
   

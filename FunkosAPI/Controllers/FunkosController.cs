@@ -2,6 +2,7 @@
 using FunkosApi.dto;
 using FunkosApi.Error;
 using FunkosApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
  
 namespace FunkosApi.Controllers;
@@ -39,6 +40,7 @@ public class FunkosController(IService service):ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> PostAsync([FromBody] FunkoRequestDto request)
     {
         return await service.SaveFunkoAsync(request).Match(
@@ -57,6 +59,7 @@ public class FunkosController(IService service):ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> PutAsync(string id, [FromBody] FunkoRequestDto request)
     {
         return await service.UpdateFunkoAsync(id, request).Match(
@@ -74,6 +77,7 @@ public class FunkosController(IService service):ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> PatchAsync(
         string id,
         [FromBody] FunkoRequestDto request)
@@ -91,6 +95,7 @@ public class FunkosController(IService service):ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAsync(string id)
     {
         return await service.DeleteFunkoAsync(id).Match(

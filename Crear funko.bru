@@ -7,7 +7,11 @@ meta {
 post {
   url: http://localhost:5182/api/Funkos
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJvb3QiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc2OTYxNjExNywiZXhwIjoxNzY5NjE5NzE2LCJpYXQiOjE3Njk2MTYxMTcsImlzcyI6IkZ1bmtvc0FwaSIsImF1ZCI6IkZ1bmtvc0FwaVVzZXJzIn0.fVmIYlZcauKeuscUJIu3VXNr3eKZAuxnPzels3JRrKY
 }
 
 body:json {

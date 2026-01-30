@@ -7,7 +7,6 @@ using FunkosApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using NUnit.Framework;
 
 namespace FunkosApiTest.Controllers;
 
@@ -29,17 +28,14 @@ public class FunkosControllerTest
     [Test]
     public async Task GetAsync_ShouldReturnOk_WithListOfFunkos()
     {
-        // Arrange
         var expectedList = new List<FunkoResponseDto>
         {
             new("1", "Test", 10.0, "Categoria1", 5, "Descripcion", null, false, DateTime.Now, DateTime.Now)
         };
         _mockService.Setup(s => s.GetFunkosAsync()).ReturnsAsync(expectedList);
 
-        // Act
         var result = await _controller.GetAsync();
 
-        // Assert
         var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         okResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         okResult.Value.Should().BeEquivalentTo(expectedList);
@@ -48,14 +44,11 @@ public class FunkosControllerTest
     [Test]
     public async Task GetAsync_ShouldReturnOk_WithEmptyList()
     {
-        // Arrange
         var expectedList = new List<FunkoResponseDto>();
         _mockService.Setup(s => s.GetFunkosAsync()).ReturnsAsync(expectedList);
 
-        // Act
         var result = await _controller.GetAsync();
 
-        // Assert
         var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
         okResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         okResult.Value.Should().BeEquivalentTo(expectedList);
@@ -204,7 +197,6 @@ public class FunkosControllerTest
     [Test]
     public async Task PatchAsync_ShouldReturnAccepted_WhenUpdateIsSuccessful()
     {
-        // Arrange
         var id = "1";
         var request = new FunkoRequestDto { Nombre = "Funko", Precio = 50.0, Categoria = "Test", Stock = 5 };
         var response = new FunkoResponseDto(id, "Funko", 50.0, "Test", 5, "Description", null, false, DateTime.Now, DateTime.Now);
@@ -212,10 +204,8 @@ public class FunkosControllerTest
         _mockService.Setup(s => s.PatchFunkoAsync(id, request))
             .ReturnsAsync(Result.Success<FunkoResponseDto, FunkoError>(response));
 
-        // Act
         var result = await _controller.PatchAsync(id, request);
 
-        // Assert
         var acceptedResult = result.Should().BeOfType<AcceptedAtActionResult>().Subject;
         acceptedResult.StatusCode.Should().Be(StatusCodes.Status202Accepted);
         acceptedResult.ActionName.Should().Be(nameof(FunkosController.GetByIdAsync));
@@ -227,7 +217,6 @@ public class FunkosControllerTest
     [Test]
     public async Task PatchAsync_ShouldReturnNotFound_WhenIdDoesNotExist()
     {
-        // Arrange
         var id = "99";
         var request = new FunkoRequestDto { Nombre = "Test", Precio = 10.0, Categoria = "Cat", Stock = 5 };
         var errorMessage = "Funko no encontrado";
@@ -235,10 +224,8 @@ public class FunkosControllerTest
         _mockService.Setup(s => s.PatchFunkoAsync(id, request))
             .ReturnsAsync(Result.Failure<FunkoResponseDto, FunkoError>(new FunkoNotFoundError(errorMessage)));
 
-        // Act
         var result = await _controller.PatchAsync(id, request);
 
-        // Assert
         var notFoundResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
         notFoundResult.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         notFoundResult.Value.Should().NotBeNull();
@@ -248,7 +235,6 @@ public class FunkosControllerTest
     [Test]
     public async Task PatchAsync_ShouldReturnInternalServerError_OnGenericError()
     {
-        // Arrange
         var id = "1";
         var request = new FunkoRequestDto { Nombre = "Test", Precio = 10.0, Categoria = "Cat", Stock = 5 };
         var errorMessage = "Error de base de datos";
@@ -256,10 +242,8 @@ public class FunkosControllerTest
         _mockService.Setup(s => s.PatchFunkoAsync(id, request))
             .ReturnsAsync(Result.Failure<FunkoResponseDto, FunkoError>(new FunkoError(errorMessage)));
 
-        // Act
         var result = await _controller.PatchAsync(id, request);
 
-        // Assert
         var serverErrorResult = result.Should().BeOfType<ObjectResult>().Subject;
         serverErrorResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
         serverErrorResult.Value.Should().NotBeNull();

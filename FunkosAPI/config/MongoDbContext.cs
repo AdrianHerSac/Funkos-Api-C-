@@ -25,4 +25,7 @@ public class MongoDbContext
     
     public IMongoCollection<Models.Funko> Funkos => 
         _database.GetCollection<Models.Funko>("funkos");
+        
+    public IMongoCollection<Models.User> Users =>
+        _database.GetCollection<Models.User>("users");
 }

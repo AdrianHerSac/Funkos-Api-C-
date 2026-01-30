@@ -1,0 +1,23 @@
+meta {
+  name: Autenticacion
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:5182/api/auth/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "root",
+    "password": "password123" 
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

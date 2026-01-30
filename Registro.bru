@@ -1,0 +1,29 @@
+meta {
+  name: Registro
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:5182/api/auth/register
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+    "username": "root",
+    "password": "password123",
+    "email": "root@example.com",
+    "roles": "Admin" 
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -24,29 +24,43 @@ public class FunkoRepository : IFunkoRepository
     public async Task<Funko?> GetByIdAsync(string id)
     {
         _log.Info("Getting Funko with id: " + id);
-        return await _funkos.Find(f => f.Id == id).FirstOrDefaultAsync();
+        try
+        {
+            return await _funkos.Find(f => f.Id == id).FirstOrDefaultAsync();
+        }
+        catch (FormatException)
+        {
+            return null;
+        }
     }
 
     public async Task<Funko?> UpdateAsync(string id, Funko newFunko)
     {
         _log.Info("Updating Funko with id: " + id);
         
-        var filter = Builders<Funko>.Filter.Eq(f => f.Id, id);
-        var update = Builders<Funko>.Update
-            .Set(f => f.Nombre, newFunko.Nombre)
-            .Set(f => f.Categoria, newFunko.Categoria)
-            .Set(f => f.Precio, newFunko.Precio)
-            .Set(f => f.Stock, newFunko.Stock)
-            .Set(f => f.Descripcion, newFunko.Descripcion)
-            .Set(f => f.Imagen, newFunko.Imagen)
-            .Set(f => f.FechaModificacion, DateTime.Now);
-        
-        var options = new FindOneAndUpdateOptions<Funko>
+        try
         {
-            ReturnDocument = ReturnDocument.After
-        };
-        
-        return await _funkos.FindOneAndUpdateAsync(filter, update, options);
+            var filter = Builders<Funko>.Filter.Eq(f => f.Id, id);
+            var update = Builders<Funko>.Update
+                .Set(f => f.Nombre, newFunko.Nombre)
+                .Set(f => f.Categoria, newFunko.Categoria)
+                .Set(f => f.Precio, newFunko.Precio)
+                .Set(f => f.Stock, newFunko.Stock)
+                .Set(f => f.Descripcion, newFunko.Descripcion)
+                .Set(f => f.Imagen, newFunko.Imagen)
+                .Set(f => f.FechaModificacion, DateTime.Now);
+            
+            var options = new FindOneAndUpdateOptions<Funko>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+            
+            return await _funkos.FindOneAndUpdateAsync(filter, update, options);
+        }
+        catch (FormatException)
+        {
+            return null;
+        }
     }
 
     public async Task<Funko> AddAsync(Funko newFunko)
@@ -61,8 +75,15 @@ public class FunkoRepository : IFunkoRepository
     public async Task<Funko?> DeleteAsync(string id)
     {
         _log.Info("Deleting Funko with id: " + id);
-        var filter = Builders<Funko>.Filter.Eq(f => f.Id, id);
-        return await _funkos.FindOneAndDeleteAsync(filter);
+        try
+        {
+            var filter = Builders<Funko>.Filter.Eq(f => f.Id, id);
+            return await _funkos.FindOneAndDeleteAsync(filter);
+        }
+        catch (FormatException)
+        {
+            return null;
+        }
     }
 
     public async Task<Funko?> FindByNombreAsync(string nombre)
@@ -77,6 +98,13 @@ public class FunkoRepository : IFunkoRepository
 
     public Task<Funko?> FindByIdAsync(string id)
     {
-        return _funkos.Find(f => f.Id == id).FirstOrDefaultAsync();
+        try
+        {
+            return _funkos.Find(f => f.Id == id).FirstOrDefaultAsync();
+        }
+        catch (FormatException)
+        {
+            return Task.FromResult<Funko?>(null);
+        }
     }
 }

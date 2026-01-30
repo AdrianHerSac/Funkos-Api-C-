@@ -1,0 +1,20 @@
+meta {
+  name: Get Funko por Id
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:5182/api/funkos/697499b07d148ed02b69d940
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJvb3QiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc2OTYxNjExNywiZXhwIjoxNzY5NjE5NzE2LCJpYXQiOjE3Njk2MTYxMTcsImlzcyI6IkZ1bmtvc0FwaSIsImF1ZCI6IkZ1bmtvc0FwaVVzZXJzIn0.fVmIYlZcauKeuscUJIu3VXNr3eKZAuxnPzels3JRrKY
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
